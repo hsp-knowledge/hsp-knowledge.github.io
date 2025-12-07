@@ -140,21 +140,48 @@ jobs:
               core.setFailed('⛔️ /publish コマンドはPR作成者のみが実行できます。');
             }
 
-      # 2. Geminiのスパム判定を確認
+      # 2. Geminiのスパム判定を確認（IssueコメントとPRレビュー両方を検索）
       - name: Check Gemini Verdict
         id: gemini-check
         uses: actions/github-script@v7
         with:
           script: |
+            const prNumber = ${{ steps.pr.outputs.number }};
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // 1. 通常のコメントを取得
             const comments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ steps.pr.outputs.number }}
+              owner,
+              repo,
+              issue_number: prNumber
             });
 
-            // Gemini (gemini-code-assistを含むユーザー) のコメントを検索
-            const botComments = comments.data.filter(c =>
-              c.user.login.includes('gemini') && c.body.includes('[SPAM-CHECK:')
+            // 2. レビューコメント（PR Review）を取得
+            const reviews = await github.rest.pulls.listReviews({
+              owner,
+              repo,
+              pull_number: prNumber
+            });
+
+            // 3. 両方を統合して時系列順に並べ替え
+            // コメントには created_at, レビューには submitted_at があるため統一して扱う
+            const allFeedback = [
+              ...comments.data.map(c => ({
+                body: c.body,
+                user: c.user.login,
+                date: new Date(c.created_at)
+              })),
+              ...reviews.data.map(r => ({
+                body: r.body,
+                user: r.user.login,
+                date: new Date(r.submitted_at)
+              }))
+            ].sort((a, b) => a.date - b.date); // 古い順 -> 新しい順
+
+            // 4. Gemini (gemini-code-assistを含むユーザー) のコメントを検索
+            const botComments = allFeedback.filter(c =>
+              c.user.includes('gemini') && c.body.includes('[SPAM-CHECK:')
             );
 
             if (botComments.length === 0) {
@@ -162,7 +189,10 @@ jobs:
               return;
             }
 
+            // 最新の判定を採用
             const lastComment = botComments[botComments.length - 1];
+            console.log(`Found Gemini verdict from: ${lastComment.date.toISOString()}`);
+
             if (lastComment.body.includes('[SPAM-CHECK: FAIL]')) {
               core.setFailed('⛔️ Geminiによりスパムまたは不適切と判定されているため、マージできません。');
             } else if (lastComment.body.includes('[SPAM-CHECK: PASS]')) {
