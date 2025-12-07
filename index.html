@@ -5,17 +5,14 @@ title: HSP-Knowledge
 
 <div class="layout-main">
 
-  <!-- メインカラム: 記事一覧 -->
   <div class="main-column">
 
-    <!-- 追加: 投稿ボタン -->
     <div class="post-submit-section">
-      <a class="post-submit-button" href="{{ "/post/" | relative_url }}">
+      <a class="post-submit-button" href="{{ "/post" | relative_url }}">
         📝 記事を投稿する
       </a>
     </div>
 
-    <!-- 追加: 検索フォーム -->
     <div class="search-box">
       <input
         type="search"
@@ -61,7 +58,6 @@ title: HSP-Knowledge
     </ul>
   </div>
 
-  <!-- サイドバー -->
   <aside class="side-column">
     <section class="side-box">
       <h3>このサイトについて</h3>
@@ -77,7 +73,7 @@ title: HSP-Knowledge
         {% assign tags = site.tags | sort %}
         {% for tag in tags %}
         <li>
-          <a href="{{ '/tags/' | append: tag[0] | append: '/' | relative_url }}">
+          <a href="{{ '/tags/' | append: tag[0] | downcase | append: '/' | relative_url }}">
             {{ tag[0] }} <span class="tag-count">({{ tag[1].size }})</span>
           </a>
         </li>
@@ -88,7 +84,6 @@ title: HSP-Knowledge
 
 </div>
 
-<!-- 追加: 検索用スクリプト -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   var input = document.getElementById('post-search');
