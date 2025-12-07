@@ -44,7 +44,7 @@ title: HSP-Knowledge
         <ul class="tag-list">
           {% for tag in post.tags %}
           <li class="tag-item">
-            <a href="{{ '/tags/' | append: tag | downcase | append: '/' | relative_url }}">{{ tag }}</a>
+            <a href="{{ '/?tag=' | append: tag | relative_url }}">{{ tag }}</a>
           </li>
           {% endfor %}
         </ul>
@@ -73,7 +73,7 @@ title: HSP-Knowledge
         {% assign tags = site.tags | sort %}
         {% for tag in tags %}
         <li>
-          <a href="{{ '/tags/' | append: tag[0] | downcase | append: '/' | relative_url }}">
+          <a href="{{ '/?tag=' | append: tag[0] | relative_url }}">
             {{ tag[0] }} <span class="tag-count">({{ tag[1].size }})</span>
           </a>
         </li>
@@ -96,8 +96,9 @@ document.addEventListener('DOMContentLoaded', function () {
     return (text || '').toLowerCase();
   }
 
-  input.addEventListener('input', function () {
-    var q = normalize(input.value);
+  // フィルタリング処理を関数化
+  function filterPosts(query) {
+    var q = normalize(query);
 
     items.forEach(function (item) {
       if (!q) {
@@ -118,6 +119,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
       item.style.display = hit ? '' : 'none';
     });
+  }
+
+  // 1. 入力イベントでの検索
+  input.addEventListener('input', function () {
+    filterPosts(input.value);
   });
+
+  // 2. URLパラメータ (?tag=...) の読み取りと初期実行
+  var urlParams = new URLSearchParams(window.location.search);
+  var tagParam = urlParams.get('tag');
+  if (tagParam) {
+    input.value = tagParam; // 検索ボックスにタグ名を入れる
+    filterPosts(tagParam);  // 絞り込み実行
+  }
 });
 </script>
