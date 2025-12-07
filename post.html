@@ -23,14 +23,14 @@ title: 記事を投稿する
 
 <p>
   <!-- ▼ ここに New File ＋ テンプレ入り URL を貼る -->
-  <a class="post-primary-button" id="post-template-link">
-    GitHub で新しい記事を書く（テンプレ付き）
-  </a>
+  ファイル名を指定してください（例: my-article.md）:<br>
+  <input type="text" id="filename-input" placeholder="new-article.md" style="width: 300px; margin: 10px 0;"><br>
+  <button id="post-button" class="post-primary-button">GitHub で新しい記事を書く（テンプレ付き）</button>
   <!-- ▲ ここまで -->
 </p>
 
 <ul>
-  <li>ファイル名は自動で今日の日付が設定されます。必要に応じて変更してください。</li>
+  <li>ファイル名は日付 + 入力した postfix で作成されます。</li>
   <li><code>title</code> / <code>author</code> / <code>tags</code> / <code>summary</code> も自分用に書き換えてください。</li>
   <li>本文はテンプレートの下にそのまま書き足せます。</li>
 </ul>
@@ -65,31 +65,39 @@ title: 記事を投稿する
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  var link = document.getElementById('post-template-link');
-  if (!link) return;
+  var button = document.getElementById('post-button');
+  if (!button) return;
 
-  // 現在の日付を取得 (YYYY-MM-DD 形式)
-  var now = new Date();
-  var year = now.getFullYear();
-  var month = String(now.getMonth() + 1).padStart(2, '0');
-  var day = String(now.getDate()).padStart(2, '0');
-  var dateStr = year + '-' + month + '-' + day;
+  button.addEventListener('click', function() {
+    var postfix = document.getElementById('filename-input').value;
+    if (!postfix) {
+      alert('ファイル名を入力してください。');
+      return;
+    }
 
-  // ファイル名
-  var filename = dateStr + '-new-article.md';
+    // 現在の日付を取得 (YYYY-MM-DD 形式)
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = String(now.getMonth() + 1).padStart(2, '0');
+    var day = String(now.getDate()).padStart(2, '0');
+    var dateStr = year + '-' + month + '-' + day;
 
-  // 日付時刻 (YYYY-MM-DD HH:MM:SS +0900)
-  var hours = String(now.getHours()).padStart(2, '0');
-  var minutes = String(now.getMinutes()).padStart(2, '0');
-  var seconds = String(now.getSeconds()).padStart(2, '0');
-  var datetimeStr = dateStr + ' ' + hours + ':' + minutes + ':' + seconds + ' +0900';
+    // ファイル名
+    var filename = dateStr + '-' + postfix;
 
-  // テンプレートの value パート
-  var templateValue = '---%0Alayout%3A%20post%0Atitle%3A%20%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%0Adate%3A%20' + encodeURIComponent(datetimeStr) + '%0Aauthor%3A%20%E3%81%8A%E5%90%8D%E5%89%8D%0Atags%3A%20%5BHSP3%5D%0Asummary%3A%20%E8%A8%98%E4%BA%8B%E3%81%AE%E6%A6%82%E8%A6%81%E3%82%92%E6%9B%B8%E3%81%84%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A---%0A%0A%E6%9C%AC%E6%96%87%E3%82%92%E3%81%93%E3%81%93%E3%81%8B%E3%82%89%E6%9B%B8%E3%81%8D%E5%A7%8B%E3%82%81%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A';
+    // 日付時刻 (YYYY-MM-DD HH:MM:SS +0900)
+    var hours = String(now.getHours()).padStart(2, '0');
+    var minutes = String(now.getMinutes()).padStart(2, '0');
+    var seconds = String(now.getSeconds()).padStart(2, '0');
+    var datetimeStr = dateStr + ' ' + hours + ':' + minutes + ':' + seconds + ' +0900';
 
-  // URL 構築
-  var url = 'https://github.com/Velgail/Hsp-Knowledge/new/main/_posts?filename=' + encodeURIComponent(filename) + '&value=' + templateValue;
+    // テンプレートの value パート
+    var templateValue = '---%0Alayout%3A%20post%0Atitle%3A%20%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%0Adate%3A%20' + encodeURIComponent(datetimeStr) + '%0Aauthor%3A%20%E3%81%8A%E5%90%8D%E5%89%8D%0Atags%3A%20%5BHSP3%5D%0Asummary%3A%20%E8%A8%98%E4%BA%8B%E3%81%AE%E6%A6%82%E8%A6%81%E3%82%92%E6%9B%B8%E3%81%84%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A---%0A%0A%E6%9C%AC%E6%96%87%E3%82%92%E3%81%93%E3%81%93%E3%81%8B%E3%82%89%E6%9B%B8%E3%81%8D%E5%A7%8B%E3%82%81%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0A';
 
-  link.href = url;
+    // URL 構築
+    var url = 'https://github.com/Velgail/Hsp-Knowledge/new/main/_posts?filename=' + encodeURIComponent(filename) + '&value=' + templateValue;
+
+    window.open(url, '_blank');
+  });
 });
 </script>
