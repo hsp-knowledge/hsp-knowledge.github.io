@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <title>{{ page.title }} - {{ site.title }}</title>
@@ -7,6 +8,7 @@
   <meta name="description" content="{{ site.description }}">
   <link rel="stylesheet" href="{{ "/assets/style.css" | relative_url }}">
 </head>
+
 <body>
   <header class="site-header">
     <div class="site-header-inner">
@@ -17,13 +19,18 @@
     </div>
   </header>
 
-  <main class="site-main">      
+  <main class="site-main">
     <div class="layout-main">
       <div class="main-column">
         {{ content }}
       </div>
       <aside class="side-column">
         <!-- このサイトについて -->
+        <div class="post-submit-section">
+          <a class="post-submit-button" href="{{ "/post" | relative_url }}">
+            📝 記事を投稿する
+          </a>
+        </div>
         <div class="side-box">
           <h3>📖 このサイトについて</h3>
           <p>
@@ -47,21 +54,34 @@
           <ul class="side-article-list">
             {% assign recent_posts = site.posts | sort: 'date' | reverse | slice: 0, 5 %}
             {% for post in recent_posts %}
-              <li>
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                <div class="side-post-date">{{ post.date | date: "%Y/%m/%d" }}</div>
-              </li>
+            <li>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <div class="side-post-date">{{ post.date | date: "%Y/%m/%d" }}</div>
+            </li>
             {% endfor %}
           </ul>
         </div>
 
         <!-- 関連リンク -->
         <div class="side-box">
-          <h3>🔗 関連リンク</h3>
+          <h3>🔗 公式リンク</h3>
           <ul class="side-link-list">
-            <li><a href="https://hsp.tv/" target="_blank" rel="noopener">HSP公式サイト</a></li>
-            <li><a href="https://hsp.moe/" target="_blank" rel="noopener">HSP開発wiki</a></li>
-            <li><a href="https://discord.gg/x3r3uUw" target="_blank" rel="noopener">HSP Discordサーバー</a></li>
+            <li><a href="https://hsp.tv/" target="_blank" rel="noopener">HSPTV! (公式サイト)</a></li>
+            <li><a href="https://hsp.tv/play/pforum.php" target="_blank" rel="noopener">HSPTV! 掲示板</a></li>
+            <li><a href="https://www.onionsoft.net/" target="_blank" rel="noopener">ONION software</a></li>
+            <li><a href="https://github.com/onitama/OpenHSP" target="_blank" rel="noopener">OpenHSP (GitHub)</a></li>
+          </ul>
+        </div>
+
+        <div class="side-box">
+          <h3>🔗 支援・コミュニティ</h3>
+          <ul class="side-link-list">
+            <li><a href="https://quasiquote.org/hspwiki/" target="_blank" rel="noopener">HSPWiKi</a></li>
+            <li><a href="https://hsp.moe/" target="_blank" rel="noopener">HSP開発wiki (hsp.moe)</a></li>
+            <li><a href="http://lhsp.s206.xrea.com/" target="_blank" rel="noopener">Let's HSP!</a></li>
+            <li><a href="https://hspland.net/" target="_blank" rel="noopener">HSPLand</a></li>
+            <li><a href="https://zuzazann.main.jp/wiki4/index.php" target="_blank" rel="noopener">zuzazann (技術Wiki)</a>
+            </li>
           </ul>
         </div>
       </aside>
@@ -140,7 +160,7 @@
     ]);
 
     // コードブロックにコピーボタンと行数表示を追加
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const codeBlocks = document.querySelectorAll('pre');
       codeBlocks.forEach((pre, index) => {
         const code = pre.querySelector('code');
@@ -151,7 +171,7 @@
         const copyButton = document.createElement('button');
         copyButton.textContent = 'コピー';
         copyButton.className = 'copy-button';
-        copyButton.onclick = function() {
+        copyButton.onclick = function () {
           const code = pre.querySelector('code');
           if (code) {
             // 行番号を除去してコピー
@@ -168,14 +188,14 @@
         // 行数表示（ハイライト済みHTMLを保持）
         if (code) {
           let html = code.innerHTML;
-          
+
           // HSP言語用のシンタックスハイライト適用
           if (isHSP) {
             html = highlightHSP(html);
           }
-          
+
           const lines = html.split('\n');
-          const numberedCode = lines.map((line, i) => 
+          const numberedCode = lines.map((line, i) =>
             `<span class="line-number">${i + 1}</span>${line}`
           ).join('\n');
           code.innerHTML = numberedCode;
@@ -188,9 +208,9 @@
       // テキストノードのみを処理してハイライト
       const div = document.createElement('div');
       div.innerHTML = html;
-      
+
       processNode(div);
-      
+
       return div.innerHTML;
     }
 
@@ -223,22 +243,22 @@
 
       // コメント処理（優先度高）
       // 1. /* */ ブロックコメント
-      result = result.replace(/\/\*[\s\S]*?\*\//g, match => 
+      result = result.replace(/\/\*[\s\S]*?\*\//g, match =>
         `<span class="hsp-comment">${match}</span>`
       );
 
       // 2. // コメント（行末まで）
-      result = result.replace(/\/\/.*$/gm, match => 
+      result = result.replace(/\/\/.*$/gm, match =>
         `<span class="hsp-comment">${match}</span>`
       );
 
       // 3. ; コメント（行末まで）
-      result = result.replace(/;.*$/gm, match => 
+      result = result.replace(/;.*$/gm, match =>
         `<span class="hsp-comment">${match}</span>`
       );
 
       // プリプロセッサ指令（#で始まる）
-      result = result.replace(/#[a-zA-Z_]\w*/g, match => 
+      result = result.replace(/#[a-zA-Z_]\w*/g, match =>
         `<span class="hsp-prep">${match}</span>`
       );
 
@@ -294,4 +314,5 @@
     document.head.appendChild(style);
   </script>
 </body>
+
 </html>
