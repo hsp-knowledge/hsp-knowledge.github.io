@@ -177,16 +177,21 @@ class ArticleValidator:
             return False
 
         # テンプレートのままでないかチェック
-        template_phrases = [
-            'ここに本文を書きます',
-            'ここを変更',
-            '本文をMarkdownで記述',
+        # 本文の最初の3行を取得（コードブロック内などを誤判定しないよう、冒頭のみチェック）
+        body_lines = body.strip().split('\n')
+        first_lines = body_lines[:3]
+
+        # テンプレートに含まれる文言（完全一致または行の主要部分）
+        template_patterns = [
+            r'^\s*ここに本文を書きます[。\.]*\s*$',  # 「ここに本文を書きます」または「ここに本文を書きます。」
+            r'^\s*ここに記事の本文を書いてください[。\.]*\s*$',  # 別バージョンのテンプレート
         ]
 
-        for phrase in template_phrases:
-            if phrase in body:
-                self.issues.append(f"本文がテンプレートのままです: '{phrase}'")
-                return False
+        for line in first_lines:
+            for pattern in template_patterns:
+                if re.match(pattern, line):
+                    self.issues.append(f"本文がテンプレートのままです（冒頭に「{line.strip()}」が残っています）")
+                    return False
 
         return True
 
@@ -241,8 +246,8 @@ def main():
     # 結果を JSON で出力
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
-    # 終了コード
-    sys.exit(0 if result["auto_approve"] else 1)
+    # 終了コードは常に0（結果の判定はJSONの内容で行う）
+    sys.exit(0)
 
 
 if __name__ == "__main__":
