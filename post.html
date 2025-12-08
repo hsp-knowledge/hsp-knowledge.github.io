@@ -175,6 +175,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var month = String(now.getMonth() + 1).padStart(2, '0');
     var day = String(now.getDate()).padStart(2, '0');
     var dateStr = year + '-' + month + '-' + day;
+    // 日付時刻 (YYYY-MM-DD HH:MM:SS +0900)
+    var hours = String(now.getHours()).padStart(2, '0');
+    var minutes = String(now.getMinutes()).padStart(2, '0');
+    var seconds = String(now.getSeconds()).padStart(2, '0');
+    var datetimeStr = dateStr + ' ' + hours + ':' + minutes + ':' + seconds + ' +09:00';
 
     // .md 拡張子なしでファイル名を結合
     var fullFilename = dateStr + '-' + filename + '.md';
@@ -188,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var frontMatter = '---\n';
     frontMatter += 'layout: post\n';
     frontMatter += 'title: ' + title + '\n';
+    frontMatter += 'date: ' + datetimeStr + '\n';
     frontMatter += 'author: ' + author + '\n';
     frontMatter += 'tags: ' + tagsYaml + '\n';
     frontMatter += 'summary: ' + summary + '\n';
