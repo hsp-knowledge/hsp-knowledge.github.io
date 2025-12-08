@@ -275,9 +275,7 @@ jobs:
             git add "${article_files[@]}"
 
             # コミット
-            git commit -m "🤖 記事のdate/lastupdateを自動更新
-
-投稿日時を現在時刻に自動設定します。"
+            git commit -m "🤖 記事のdate/lastupdateを自動更新\n投稿日時を現在時刻に自動設定します。"
 
             # 現在のブランチを更新
             git push origin pr-branch:refs/heads/${{ github.head_ref }}
