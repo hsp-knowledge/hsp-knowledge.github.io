@@ -5,3 +5,4 @@ url: "https://Velgail.github.io"   # あなたのユーザー名に合わせる
 markdown: kramdown
 theme: null
 plugins: []
+timezone: Asia/Tokyo

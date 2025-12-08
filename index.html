@@ -31,7 +31,11 @@ title: HSP-Knowledge
         </h3>
         <div class="post-meta">
           <span class="post-date">
-            {{ post.date | date: "%Y-%m-%d" }}
+            {% if post.lastupdate %}
+              🔄 {{ post.lastupdate | date: "%Y-%m-%d" }}
+            {% else %}
+              📅 {{ post.date | date: "%Y-%m-%d" }}
+            {% endif %}
           </span>
           {% if post.author %}
           <span class="post-author">by {{ post.author }}</span>

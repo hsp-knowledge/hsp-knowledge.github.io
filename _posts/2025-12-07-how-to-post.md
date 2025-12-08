@@ -1,7 +1,8 @@
 ---
 layout: post
 title: 記事の投稿方法
-date: 2025-12-07 12:00:00 +0900
+date: 2000-01-01 12:00:00 +0900
+lastupdate: 2099-12-31 23:59:59 +9:00
 author: HSP-Knowledge運営
 tags: [使い方, チュートリアル]
 summary: HSP-Knowledgeに記事を投稿する方法を説明します。GitHubを使った投稿手順を分かりやすく解説。

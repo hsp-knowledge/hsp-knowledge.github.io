@@ -11,8 +11,13 @@ layout: default
         <h2 class="post-title">{{ page.title }}</h2>
         <div class="post-meta">
           <span class="post-date">
-            {{ page.date | date: "%Y-%m-%d" }}
+            📅 {{ page.date | date: "%Y-%m-%d" }}
           </span>
+          {% if page.lastupdate %}
+          <span class="post-lastupdate">
+            🔄 更新: {{ page.lastupdate | date: "%Y-%m-%d" }}
+          </span>
+          {% endif %}
           {% if page.author %}
           <span class="post-author">by {{ page.author }}</span>
           {% endif %}

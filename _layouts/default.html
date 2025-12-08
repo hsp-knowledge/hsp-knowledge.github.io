@@ -44,8 +44,8 @@
           <h3>📚 投稿マニュアル</h3>
           <ul class="side-article-list">
             <li>
-              <a href="{{ '/2025/12/07/how-to-post' | relative_url }}">記事の投稿方法（How to post）</a>
-              <div class="side-post-date">{{ site.time | date: "%Y/%m/%d" }}</div>
+              <a href="{{ '/2000/01/01/how-to-post' | relative_url }}">記事の投稿方法（How to post）</a>
+              <!-- <div class="side-post-date">{{ site.time | date: "%Y/%m/%d" }}</div> -->
             </li>
           </ul>
         </div>
@@ -56,7 +56,13 @@
             {% for post in recent_posts %}
             <li>
               <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              <div class="side-post-date">{{ post.date | date: "%Y/%m/%d" }}</div>
+              <div class="side-post-date">
+                {% if post.lastupdate %}
+                  {{ post.lastupdate | date: "%Y/%m/%d" }}
+                {% else %}
+                  {{ post.date | date: "%Y/%m/%d" }}
+                {% endif %}
+              </div>
             </li>
             {% endfor %}
           </ul>
@@ -81,6 +87,111 @@
             <li><a href="http://lhsp.s206.xrea.com/" target="_blank" rel="noopener">Let's HSP!</a></li>
             <li><a href="https://hspland.net/" target="_blank" rel="noopener">HSPLand</a></li>
             <li><a href="https://zuzazann.main.jp/wiki4/index.php" target="_blank" rel="noopener">zuzazann (技術Wiki)</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 推奨タグ -->
+        <div class="side-box">
+          <h3>🏷️ 推奨タグ</h3>
+
+          <p style="font-size: 12px; color: #666; margin: 0 0 8px 0;"><strong>🎯 対象分野</strong></p>
+          <ul class="side-link-list" style="margin: 5px 0 15px 0;">
+            <li>
+              <a href="{{ '/?tag=HSP3' | relative_url }}">HSP3</a>
+              {% assign hsp3_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "HSP3" %}{% assign hsp3_count = hsp3_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ hsp3_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=ゲーム制作' | relative_url }}">ゲーム制作</a>
+              {% assign game_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "ゲーム制作" %}{% assign game_count = game_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ game_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=3D' | relative_url }}">3D</a>
+              {% assign d3_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "3D" %}{% assign d3_count = d3_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ d3_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=ライブラリ' | relative_url }}">ライブラリ</a>
+              {% assign lib_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "ライブラリ" %}{% assign lib_count = lib_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ lib_count }})</span>
+            </li>
+          </ul>
+
+          <p style="font-size: 12px; color: #666; margin: 0 0 8px 0;"><strong>📚 コンテンツタイプ</strong></p>
+          <ul class="side-link-list" style="margin: 5px 0 15px 0;">
+            <li>
+              <a href="{{ '/?tag=Tips' | relative_url }}">Tips</a>
+              {% assign tips_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "Tips" %}{% assign tips_count = tips_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ tips_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=デバッグ' | relative_url }}">デバッグ</a>
+              {% assign debug_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "デバッグ" %}{% assign debug_count = debug_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ debug_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=作品紹介' | relative_url }}">作品紹介</a>
+              {% assign work_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "作品紹介" %}{% assign work_count = work_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ work_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=募集' | relative_url }}">募集</a>
+              {% assign recruit_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "募集" %}{% assign recruit_count = recruit_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ recruit_count }})</span>
+            </li>
+          </ul>
+
+          <p style="font-size: 12px; color: #666; margin: 0 0 8px 0;"><strong>📖 難易度</strong></p>
+          <ul class="side-link-list">
+            <li>
+              <a href="{{ '/?tag=入門' | relative_url }}">入門</a>
+              {% assign beginner_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "入門" %}{% assign beginner_count = beginner_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ beginner_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=中級' | relative_url }}">中級</a>
+              {% assign intermediate_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "中級" %}{% assign intermediate_count = intermediate_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ intermediate_count }})</span>
+            </li>
+            <li>
+              <a href="{{ '/?tag=応用' | relative_url }}">応用</a>
+              {% assign advanced_count = 0 %}
+              {% for post in site.posts %}
+                {% if post.tags contains "応用" %}{% assign advanced_count = advanced_count | plus: 1 %}{% endif %}
+              {% endfor %}
+              <span style="font-size: 12px; color: #999; margin-left: 5px;">({{ advanced_count }})</span>
             </li>
           </ul>
         </div>
