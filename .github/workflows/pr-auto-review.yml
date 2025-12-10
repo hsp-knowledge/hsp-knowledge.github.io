@@ -137,7 +137,7 @@ jobs:
             echo "❌ エラーがあるため、修正が必要です。" >> report.md
           else
             echo "" >> report.md
-            echo "✅ 形式は正常です。Geminiのレビュー完了後、問題なければ \`/publish\` で公開できます。" >> report.md
+            echo "✅ 形式は正常です。GeminiのCode Review完了後、問題なければ \`/publish\` で公開できます。" >> report.md
           fi
 
           cat report.md >> $GITHUB_STEP_SUMMARY
@@ -188,10 +188,16 @@ jobs:
               pull_number: ${{ steps.pr.outputs.number }}
             });
             if (pr.data.user.login !== context.payload.comment.user.login) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: '⛔️ /publish コマンドはPR作成者のみが実行できます。'
+              });
               core.setFailed('⛔️ /publish コマンドはPR作成者のみが実行できます。');
             }
 
-      # 2. Geminiのスパム判定を確認（IssueコメントとPRレビュー両方を検索）
+      # 2. GeminiのCode Reviewを確認（存在とスパム判定）
       - name: Check Gemini Verdict
         id: gemini-check
         uses: actions/github-script@v7
@@ -201,22 +207,37 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
 
-            // 1. 通常のコメントを取得
-            const comments = await github.rest.issues.listComments({
-              owner,
-              repo,
-              issue_number: prNumber
-            });
-
-            // 2. レビューコメント（PR Review）を取得
+            // 1. レビューコメント（PR Review）を取得
             const reviews = await github.rest.pulls.listReviews({
               owner,
               repo,
               pull_number: prNumber
             });
 
-            // 3. 両方を統合して時系列順に並べ替え
-            // コメントには created_at, レビューには submitted_at があるため統一して扱う
+            // 2. Gemini (gemini-code-assistを含むユーザー) のレビューが存在するか確認
+            const geminiReviews = reviews.data.filter(r =>
+              r.user.login.includes('gemini')
+            );
+
+            if (geminiReviews.length === 0) {
+              await github.rest.issues.createComment({
+                owner: owner,
+                repo: repo,
+                issue_number: prNumber,
+                body: '⛔️ GeminiのCode Reviewがまだ完了していません。レビュー完了まで待ってから /publish を実行してください。'
+              });
+              core.setFailed('⛔️ GeminiのCode Reviewがまだ完了していません。');
+              return;
+            }
+
+            // 3. 通常のコメントを取得
+            const comments = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: prNumber
+            });
+
+            // 4. 両方を統合して時系列順に並べ替え
             const allFeedback = [
               ...comments.data.map(c => ({
                 body: c.body,
@@ -230,13 +251,19 @@ jobs:
               }))
             ].sort((a, b) => a.date - b.date); // 古い順 -> 新しい順
 
-            // 4. Gemini (gemini-code-assistを含むユーザー) のコメントを検索
+            // 5. Gemini (gemini-code-assistを含むユーザー) のコメントを検索
             const botComments = allFeedback.filter(c =>
               c.user.includes('gemini') && c.body.includes('[SPAM-CHECK:')
             );
 
             if (botComments.length === 0) {
-              core.setFailed('⛔️ Geminiによるレビュー（スパム判定）がまだ見つかりません。しばらく待ってから再試行してください。');
+              await github.rest.issues.createComment({
+                owner: owner,
+                repo: repo,
+                issue_number: prNumber,
+                body: '⛔️ Geminiによるスパム判定が見つかりません。レビュー完了まで待ってから /publish を実行してください。'
+              });
+              core.setFailed('⛔️ Geminiによるスパム判定が見つかりません。');
               return;
             }
 
@@ -245,10 +272,22 @@ jobs:
             console.log(`Found Gemini verdict from: ${lastComment.date.toISOString()}`);
 
             if (lastComment.body.includes('[SPAM-CHECK: FAIL]')) {
-              core.setFailed('⛔️ Geminiによりスパムまたは不適切と判定されているため、マージできません。');
+              await github.rest.issues.createComment({
+                owner: owner,
+                repo: repo,
+                issue_number: prNumber,
+                body: '⛔️ Geminiによりスパムまたは不適切と判定されているため、マージできません。'
+              });
+              core.setFailed('⛔️ Geminiによりスパムまたは不適切と判定されています。');
             } else if (lastComment.body.includes('[SPAM-CHECK: PASS]')) {
               console.log('Gemini check passed.');
             } else {
+              await github.rest.issues.createComment({
+                owner: owner,
+                repo: repo,
+                issue_number: prNumber,
+                body: '⛔️ Geminiの判定タグが読み取れませんでした。'
+              });
               core.setFailed('⛔️ Geminiの判定タグが読み取れませんでした。');
             }
 
@@ -292,6 +331,19 @@ jobs:
           done < changed_files.txt
         env:
           GH_TOKEN: ${{ github.token }}
+
+      # 3.5. 形式チェック失敗時のコメント
+      - name: Comment on Format Check Failure
+        if: failure() && steps.final-check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '⛔️ 形式チェックまたは権限チェックに失敗しました。記事の内容を確認してください。'
+            });
 
       # 4. Approve & Merge: 先にApproveを行い、その後マージを試行します
       - name: Approve and Merge
