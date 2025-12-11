@@ -134,6 +134,17 @@ a:hover {
   line-height: 1.7;
 }
 
+/* インラインコード（GitHub風） */
+.post-content code {
+  padding: 2px 6px;
+  background: #f6f8fa;
+  color: #24292f;
+  border-radius: 3px;
+  font-size: 85%;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  border: 1px solid #d0d7de;
+}
+
 .post-content pre {
   padding: 8px 12px;
   border-radius: 6px;
@@ -146,6 +157,43 @@ a:hover {
 
 .post-content pre code {
   display: block;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  border-radius: 0;
+  font-size: 13px;
+  border: none;
+}
+
+/* 表（GitHub風） */
+.post-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: 16px 0;
+  overflow: auto;
+  border: 1px solid #d0d7de;
+}
+
+.post-content table th {
+  background-color: #f6f8fa;
+  text-align: left;
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+  font-weight: 600;
+}
+
+.post-content table td {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+}
+
+.post-content table tr {
+  border-top: 1px solid #d0d7de;
+}
+
+.post-content table tr:nth-child(2n) {
+  background-color: #f6f8fa;
 }
 
 .line-number {
@@ -191,6 +239,11 @@ a:hover {
 .hsp-instr,
 .hsp-func {
   color: #0099ff; /* 濃いめの青 */
+  font-weight: bold;
+}
+
+.hsp-label {
+  color: #f92672; /* ピンク */
   font-weight: bold;
 }
 

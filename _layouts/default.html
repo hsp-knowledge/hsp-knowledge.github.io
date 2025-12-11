@@ -356,6 +356,11 @@
     function highlightText(text) {
       let result = text;
 
+      // ラベル処理（*で始まる行、コメントまで）
+      result = result.replace(/^\*[^;\n]*(?=;|\/\/|\/\*|$)/gm, match =>
+        `<span class="hsp-label">${match}</span>`
+      );
+
       // コメント処理（優先度高）
       // 1. /* */ ブロックコメント
       result = result.replace(/\/\*[\s\S]*?\*\//g, match =>
