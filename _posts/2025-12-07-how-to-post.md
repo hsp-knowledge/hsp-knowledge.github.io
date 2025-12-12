@@ -20,7 +20,7 @@ HSP-Knowledgeへようこそ! このサイトでは、HSPに関する知識やTi
 
 ## 1. リポジトリをFork
 
-まず、[GitHub リポジトリ](https://github.com/Velgail/HSP-Knowledge)にアクセスして、右上の「Fork」ボタンをクリックします。
+まず、[GitHub リポジトリ](https://github.com/hsp-knowledge/hsp-knowledge.github.io/)にアクセスして、右上の「Fork」ボタンをクリックします。
 
 これであなたのGitHubアカウントにリポジトリのコピーが作成されます。
 

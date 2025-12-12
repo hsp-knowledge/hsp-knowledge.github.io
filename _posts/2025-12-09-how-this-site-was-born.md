@@ -240,7 +240,7 @@ GitHub Actions: 検証OK？ → Approve → Auto Merge
 
 ```bash
 # GitHubでForkボタンを押すか、CLIで
-gh repo fork Velgail/HSP-Knowledge
+gh repo fork hsp-knowledge/hsp-knowledge.github.io
 ```
 
 ### 2. 設定を書き換え
