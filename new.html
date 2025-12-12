@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
       await navigator.clipboard.writeText(fullContent);
 
       // GitHubの新規作成URLを生成
-      const githubNewUrl = `https://github.com/Velgail/HSP-Knowledge/new/main/_posts?filename=${encodeURIComponent(fullFilename)}`;
+      const githubNewUrl = `https://github.com/hsp-knowledge/hsp-knowledge.github.io/new/main/_posts?filename=${encodeURIComponent(fullFilename)}`;
 
       // 確認ダイアログ
       if (confirm('✅ 記事の内容をクリップボードにコピーしました！\n\nGitHubの新規作成ページを開きますので、エディタ内で Ctrl+V（ペースト）してください。\n\nファイル名: ' + fullFilename)) {

@@ -286,10 +286,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   filePathElement.textContent = articlePath;
 
   // GitHubの直接編集リンクを設定
-  githubDirectButton.href = `https://github.com/Velgail/HSP-Knowledge/edit/main/${articlePath}`;
+  githubDirectButton.href = `https://github.com/hsp-knowledge/hsp-knowledge.github.io/edit/main/${articlePath}`;
 
   // GitHubからMarkdownを取得
-  const rawUrl = `https://raw.githubusercontent.com/Velgail/HSP-Knowledge/main/${articlePath}`;
+  const rawUrl = `https://raw.githubusercontent.com/hsp-knowledge/hsp-knowledge.github.io/main/${articlePath}`;
 
   try {
     const response = await fetch(rawUrl);
@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         await navigator.clipboard.writeText(fullContent);
 
         // GitHubの編集ページを開く（コンテンツはクリップボード経由）
-        const githubEditUrl = `https://github.com/Velgail/HSP-Knowledge/edit/main/${articlePath}`;
+        const githubEditUrl = `https://github.com/hsp-knowledge/hsp-knowledge.github.io/edit/main/${articlePath}`;
 
         // 確認ダイアログ
         if (confirm('✅ 編集内容をクリップボードにコピーしました！\n\nGitHubの編集ページを開きますので、エディタ内で Ctrl+A（全選択）→ Ctrl+V（ペースト）してください。')) {

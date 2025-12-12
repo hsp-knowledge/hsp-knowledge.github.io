@@ -7,7 +7,7 @@ tags: [HSP3, C++, C++23, ラムダ式]
 summary: HSPの強力な機能「割り込み」をC++で再現。HSPPPにおけるイベント駆動プログラミングと、システム変数（iparam/wparam）の扱い方について解説します。
 ---
 
-[前回](https://velgail.github.io/HSP-Knowledge/2025/12/07/HSPPP.html)は、HSP互換C++ライブラリ「HSPPP」の概要を紹介しました。
+[前回](https://hsp-knowledge.github.io/2025/12/07/HSPPP.html)は、HSP互換C++ライブラリ「HSPPP」の概要を紹介しました。
 今回は、HSPPPの中でも特にHSPユーザーにとって大きなパラダイムシフトとなる**割り込みハンドラ**と、**「goto廃止」の理由**について解説します。
 
 ## HSPの「割り込み」とは？

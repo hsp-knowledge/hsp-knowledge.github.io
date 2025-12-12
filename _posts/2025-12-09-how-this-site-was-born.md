@@ -40,7 +40,7 @@ ABATBelieverさん（HSP Wiki運営者）のコメントが的を射ていまし
 
 そして、その日のうちに実験場を公開：
 
-> 一応頑張ればGithub Pagesでできるっぽいので、[実験場を作ってみました](https://velgail.github.io/HSP-Knowledge/)。
+> 一応頑張ればGithub Pagesでできるっぽいので、[実験場を作ってみました](https://hsp-knowledge.github.io/)。
 
 ここから怒涛の開発が始まります。
 
@@ -294,8 +294,8 @@ url: "https://your-username.github.io"
 
 ## 📚 関連リンク
 
-- [HSP-Knowledge GitHub リポジトリ](https://github.com/Velgail/HSP-Knowledge)
-- [自動レビューシステムの詳細](https://github.com/Velgail/HSP-Knowledge/blob/main/docs/AUTO_REVIEW_SYSTEM.md)
+- [HSP-Knowledge GitHub リポジトリ](https://github.com/hsp-knowledge/hsp-knowledge.github.io)
+- [自動レビューシステムの詳細](https://github.com/hsp-knowledge/hsp-knowledge.github.io/blob/main/docs/AUTO_REVIEW_SYSTEM.md)
 
 ## おわりに
 

@@ -172,11 +172,11 @@ mes "日本語も使えます"
 bundle exec jekyll serve
 ```
 
-ブラウザで`http://localhost:4000/HSP-Knowledge/`にアクセスすると、記事のプレビューが表示されます。
+ブラウザで`http://localhost:4000/`にアクセスすると、記事のプレビューが表示されます。
 
-## ❓ 困ったときは
+### 困ったときは
 
-- [GitHub Discussions](https://github.com/Velgail/HSP-Knowledge/discussions) で質問する
+- [GitHub Discussions](https://github.com/hsp-knowledge/hsp-knowledge.github.io/discussions) で質問する
 - Issuesで問題を報告する
 - HSPTV! 掲示板で相談する
 
