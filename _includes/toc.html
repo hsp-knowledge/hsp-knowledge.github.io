@@ -1,0 +1,74 @@
+<div class="table-of-contents">
+  <h2>目次</h2>
+  <nav id="toc">
+    <!-- Table of Contents will be generated here -->
+  </nav>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const toc = document.getElementById('toc');
+  const content = document.querySelector('.post-article');
+  
+  if (!content) return;
+  
+  const headings = Array.from(content.querySelectorAll('h2:not(.post-title), h3, h4')).filter(heading => !heading.closest('.table-of-contents'));
+  
+  const tocWrapper = document.querySelector('.table-of-contents');
+  if (headings.length === 0) {
+    if (tocWrapper) tocWrapper.style.display = 'none';
+    return;
+  }
+  
+  let tocHTML = '<ul>';
+  let currentLevel = 2;
+  
+  const usedIds = new Set();
+  
+  headings.forEach((heading, index) => {
+    const level = parseInt(heading.tagName.substring(1));
+    const text = heading.textContent;
+    
+    if (!heading.id) {
+      let slug = text.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+      if (!slug) {
+        slug = 'heading-' + index;
+      }
+      let id = 'toc-' + slug;
+      let counter = 1;
+      while (usedIds.has(id)) {
+        id = 'toc-' + slug + '-' + counter;
+        counter++;
+      }
+      usedIds.add(id);
+      heading.id = id;
+    }
+    
+    // Handle nesting
+    if (level > currentLevel) {
+      for (let i = currentLevel; i < level; i++) {
+        tocHTML += '<ul>';
+      }
+    } else if (level < currentLevel) {
+      tocHTML += '</li>';
+      for (let i = level; i < currentLevel; i++) {
+        tocHTML += '</ul></li>';
+      }
+    } else if (index > 0) {
+      tocHTML += '</li>';
+    }
+    
+    tocHTML += `<li><a href="#${heading.id}">${text}</a>`;
+    currentLevel = level;
+  });
+  
+  // Close remaining tags
+  tocHTML += '</li>';
+  for (let i = 2; i < currentLevel; i++) {
+    tocHTML += '</ul></li>';
+  }
+  tocHTML += '</ul>';
+  
+  toc.innerHTML = tocHTML;
+});
+</script>
