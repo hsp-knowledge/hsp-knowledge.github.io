@@ -7,7 +7,7 @@ tags: [入門, 問題集]
 summary: VimWorkbookは、Linux技術者認定試験「LPIC」の学習を目的として作成された、vimコマンドに特化した問題集アプリケーションです。
 ---
 
-[HSPプロコン2024内ユーザー投稿画面](https://dev.onionsoft.net/seed/info.ax?id=2505))
+[HSPプロコン2024内ユーザー投稿画面](https://dev.onionsoft.net/seed/info.ax?id=2505)
 
 ## アプリの概要
 
