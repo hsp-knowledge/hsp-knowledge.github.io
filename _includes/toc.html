@@ -8,26 +8,40 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const toc = document.getElementById('toc');
-  // 記事本文のみを対象にする
   const content = document.querySelector('.post-article');
   
   if (!content) return;
   
-  // Get all headings (h2, h3, h4) - but exclude the post title
-  const headings = content.querySelectorAll('h2:not(.post-title), h3, h4');
+  const headings = Array.from(content.querySelectorAll('h2:not(.post-title), h3, h4')).filter(heading => !heading.closest('.table-of-contents'));
   
-  if (headings.length === 0) return;
+  const tocWrapper = document.querySelector('.table-of-contents');
+  if (headings.length === 0) {
+    if (tocWrapper) tocWrapper.style.display = 'none';
+    return;
+  }
   
   let tocHTML = '<ul>';
   let currentLevel = 2;
+  
+  const usedIds = new Set();
   
   headings.forEach((heading, index) => {
     const level = parseInt(heading.tagName.substring(1));
     const text = heading.textContent;
     
-    // Create ID if not exists
     if (!heading.id) {
-      heading.id = 'heading-' + index;
+      let slug = text.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+      if (!slug) {
+        slug = 'heading-' + index;
+      }
+      let id = 'toc-' + slug;
+      let counter = 1;
+      while (usedIds.has(id)) {
+        id = 'toc-' + slug + '-' + counter;
+        counter++;
+      }
+      usedIds.add(id);
+      heading.id = id;
     }
     
     // Handle nesting
@@ -36,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tocHTML += '<ul>';
       }
     } else if (level < currentLevel) {
+      tocHTML += '</li>';
       for (let i = level; i < currentLevel; i++) {
         tocHTML += '</ul></li>';
       }
@@ -48,54 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Close remaining tags
+  tocHTML += '</li>';
   for (let i = 2; i < currentLevel; i++) {
     tocHTML += '</ul></li>';
   }
-  tocHTML += '</li></ul>';
+  tocHTML += '</ul>';
   
   toc.innerHTML = tocHTML;
 });
 </script>
-
-<style>
-.table-of-contents {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.table-of-contents h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.25rem;
-  color: #333;
-}
-
-#toc ul {
-  list-style-type: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-#toc ul ul {
-  padding-left: 1.5rem;
-  margin-top: 0.5rem;
-}
-
-#toc li {
-  margin: 0.5rem 0;
-}
-
-#toc a {
-  text-decoration: none;
-  color: #0066cc;
-  transition: color 0.2s;
-}
-
-#toc a:hover {
-  color: #004499;
-  text-decoration: underline;
-}
-</style>
