@@ -12,10 +12,20 @@
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <h1 class="site-title">
-        <a href="{{ "/" | relative_url }}">{{ site.title }}</a>
-      </h1>
-      <p class="site-description">{{ site.description }}</p>
+      <div class="site-header-content">
+        <div>
+          <h1 class="site-title">
+            <a href="{{ "/" | relative_url }}">{{ site.title }}</a>
+          </h1>
+          <p class="site-description">{{ site.description }}</p>
+        </div>
+        <div class="font-size-control">
+          <label class="font-size-label">フォントサイズ:</label>
+          <button class="font-size-btn" data-size="small">S</button>
+          <button class="font-size-btn" data-size="medium">M</button>
+          <button class="font-size-btn" data-size="large">L</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -34,7 +44,7 @@
         <div class="side-box">
           <h3>📖 このサイトについて</h3>
           <p>
-            HSP に関する記事をゆるく集める Qiita風の実験サイトです。<br>
+            HSP に関する記事をゆるく集める Qiita風のナレッジ共有サイトです。<br>
             チュートリアル・Tips・解説などを Markdown で管理しています。
           </p>
         </div>
@@ -206,6 +216,54 @@
       Article content: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color: #999; text-decoration: underline;">CC BY 4.0</a>
     </p>
   </footer>
+
+  <script>
+    // フォントサイズ切り替え機能
+    (function() {
+      const fontSizeBtns = document.querySelectorAll('.font-size-btn');
+      const root = document.documentElement;
+      
+      // 保存されたフォントサイズを読み込む（デフォルトはmedium）
+      let savedSize = 'medium';
+      try {
+        savedSize = localStorage.getItem('fontSizePreference') || 'medium';
+      } catch (e) {
+        console.warn('Failed to read fontSizePreference from localStorage.', e);
+      }
+      applyFontSize(savedSize);
+      
+      // ボタンにクリックイベントを設定
+      fontSizeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const size = this.dataset.size;
+          applyFontSize(size);
+          try {
+            localStorage.setItem('fontSizePreference', size);
+          } catch (e) {
+            console.warn('Failed to save fontSizePreference to localStorage.', e);
+          }
+        });
+      });
+      
+      function applyFontSize(size) {
+        // data-font-size属性を更新
+        if (size === 'small') {
+          root.removeAttribute('data-font-size');
+        } else {
+          root.setAttribute('data-font-size', size);
+        }
+        
+        // アクティブなボタンを更新
+        fontSizeBtns.forEach(btn => {
+          if (btn.dataset.size === size) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+    })();
+  </script>
 
   <script>
     // HSP命令・関数リスト（濃いめの青）

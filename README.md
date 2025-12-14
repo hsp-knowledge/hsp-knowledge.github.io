@@ -4,7 +4,7 @@
 
 [🚀 サイトを見る](https://velgail.github.io/HSP-Knowledge/)
 
-このプロジェクトは、Qiitaのような技術情報共有サービスを、GitHub Pages と Jekyll を用いてサーバー費用ゼロ・メンテナンスフリーで実現する実験的な試みです。
+このプロジェクトは、Qiitaのような技術情報共有サービスを、GitHub Pages と Jekyll を用いてサーバー費用ゼロ・メンテナンスフリーで実現する取り組みです。
 誰でも Markdown で記事を書いて Pull Request を送ることで、知識を共有できます。
 
 ## ✨ 特徴
