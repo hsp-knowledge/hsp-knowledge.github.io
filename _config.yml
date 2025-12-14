@@ -1,5 +1,5 @@
 title: HSP-Knowledge
-description: Qiita的なHSPナレッジ共有の実験
+description: Qiita的なHSPナレッジ共有サイト
 baseurl: ""   # GitHub PagesのOrganizationサイトのためルートパス
 url: "https://hsp-knowledge.github.io"   # Organization名に合わせる
 markdown: kramdown
