@@ -4,7 +4,6 @@
 
 :root {
   /* フォントサイズ設定 - Small (現在のデフォルト) */
-  --font-size-body: 14px;
   --font-size-h1: 24px;
   --font-size-h2: 20px;
   --font-size-h3: 16px;
@@ -17,7 +16,6 @@
 
 /* Medium サイズ */
 :root[data-font-size="medium"] {
-  --font-size-body: 16px;
   --font-size-h1: 28px;
   --font-size-h2: 24px;
   --font-size-h3: 18px;
@@ -30,7 +28,6 @@
 
 /* Large サイズ */
 :root[data-font-size="large"] {
-  --font-size-body: 18px;
   --font-size-h1: 32px;
   --font-size-h2: 28px;
   --font-size-h3: 20px;
@@ -46,7 +43,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f5f5f5;
   color: #222;
-  font-size: var(--font-size-body);
+  font-size: var(--font-size-normal);
 }
 
 a {
@@ -62,6 +59,13 @@ a:hover {
   background: #24292f;
   color: #fff;
   padding: 16px 0;
+}
+
+.site-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* 小さい画面で折り返すように */
 }
 
 .site-header-inner {
@@ -591,6 +595,12 @@ a:hover {
   .site-header-inner {
     padding: 0 8px;
   }
+
+  .site-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }
 /* 会話全体の枠 */
 .chat-box {
@@ -706,13 +716,19 @@ a:hover {
   gap: 6px;
 }
 
+.font-size-label {
+  font-size: var(--font-size-xsmall);
+  color: #ccc;
+  margin-right: 8px;
+}
+
 .font-size-btn {
   background: #3a3f47;
   color: #fff;
   border: 2px solid #555;
   border-radius: 4px;
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: var(--font-size-normal);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;

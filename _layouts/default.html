@@ -12,7 +12,7 @@
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="site-header-content">
         <div>
           <h1 class="site-title">
             <a href="{{ "/" | relative_url }}">{{ site.title }}</a>
@@ -20,7 +20,7 @@
           <p class="site-description">{{ site.description }}</p>
         </div>
         <div class="font-size-control">
-          <label style="font-size: 12px; color: #ccc; margin-right: 8px;">フォントサイズ:</label>
+          <label class="font-size-label">フォントサイズ:</label>
           <button class="font-size-btn" data-size="small">S</button>
           <button class="font-size-btn" data-size="medium">M</button>
           <button class="font-size-btn" data-size="large">L</button>
@@ -224,7 +224,12 @@
       const root = document.documentElement;
       
       // 保存されたフォントサイズを読み込む（デフォルトはmedium）
-      const savedSize = localStorage.getItem('fontSizePreference') || 'medium';
+      let savedSize = 'medium';
+      try {
+        savedSize = localStorage.getItem('fontSizePreference') || 'medium';
+      } catch (e) {
+        console.warn('Failed to read fontSizePreference from localStorage.', e);
+      }
       applyFontSize(savedSize);
       
       // ボタンにクリックイベントを設定
@@ -232,7 +237,11 @@
         btn.addEventListener('click', function() {
           const size = this.dataset.size;
           applyFontSize(size);
-          localStorage.setItem('fontSizePreference', size);
+          try {
+            localStorage.setItem('fontSizePreference', size);
+          } catch (e) {
+            console.warn('Failed to save fontSizePreference to localStorage.', e);
+          }
         });
       });
       
