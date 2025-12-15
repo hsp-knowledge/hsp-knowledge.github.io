@@ -84,7 +84,7 @@ VS Code は Python, JavaScript, C++ など、あらゆる言語で使われて�
     * 公式サイトからダウンロードしてインストールしてください。
     * UTF-8 版のランタイムが含まれるバージョンを推奨します。
 2. **Visual Studio Code**
-    * [公式サイト](https://code.visualstudio.com/ "null") からダウンロードしてインストールしてください。
+    * [公式サイト](https://code.visualstudio.com/) からダウンロードしてインストールしてください。
 
 ### Step 2: 拡張機能「HSP3 Language Support」の導入
 
