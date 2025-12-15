@@ -91,7 +91,7 @@ VS Code は Python, JavaScript, C++ など、あらゆる言語で使われて�
 現在はプレビュー版のため、GitHub から拡張機能ファイル (`.vsix`) をダウンロードして手動でインストールします。
 
 1. **拡張機能ファイルのダウンロード**
-    * [GitHub Releases ページ](https://github.com/Velgail/HSP3-Language-Support/releases/tag/Initial-Release "null") にアクセスします。
+    * [GitHub Releases ページ](https://github.com/Velgail/HSP3-Language-Support/releases/tag/Initial-Release) にアクセスします。
     * **`hsp3-language-support-0.1.1.vsix`** をクリックしてダウンロードしてください。
 2. **VS Code へのインストール**
     * VS Code を起動し、左側のバーにある **拡張機能アイコン** (四角いブロックのアイコン) をクリックします（または `Ctrl+Shift+X`）。
