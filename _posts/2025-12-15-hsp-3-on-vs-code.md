@@ -170,7 +170,7 @@ hsed3 と同様に、`F5` キーでスクリプトを実行できます。 コ�
 * HSP3.7 以降では UTF-8 でのコンパイルがサポートされています。
 * Shift\_JIS の過去資産を扱う場合は、右下の文字コードから「Reopen with Encoding (エンコーディング付きで再度開く)」→「Shift\_JIS」を選択してください。
 
-※ 参考: \[UTF\-8版エディタ hsed3u8 の紹介\]\(\{\{ '/2025/12/11/introduce\-hsed3u8\.html' \| relative\_url \}\}\)
+※ 参考: [UTF-8版エディタ hsed3u8 の紹介]({{ '/2025/12/11/introduce-hsed3u8.html' | relative_url }})
 
 ### Q. 補完が出ません
 
