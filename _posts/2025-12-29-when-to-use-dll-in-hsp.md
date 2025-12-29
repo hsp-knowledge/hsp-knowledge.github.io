@@ -17,9 +17,10 @@ HSPで開発していると、「この処理、重いからDLL化したほう�
 1. [DLL化のメリット・デメリット](#dll化のメリットデメリット)
 2. [DLL化すべき処理](#dll化すべき処理)
 3. [DLL化すべきでない処理](#dll化すべきでない処理)
-4. [判断基準のフローチャート](#判断基準のフローチャート)
-5. [実装例](#実装例)
-6. [まとめ](#まとめ)
+4. [特殊なアーキテクチャパターン：HSPを「Drawer」として使う](#特殊なアーキテクチャパターンhspをdrawerとして使う)
+5. [判断基準のフローチャート](#判断基準のフローチャート)
+6. [実装例](#実装例)
+7. [まとめ](#まとめ)
 
 ---
 
@@ -264,6 +265,149 @@ stop
 - C/C++のデバッグはHSPより難しい
 - クラッシュすると原因特定が困難
 - まずHSPで動作確認してからDLL化を検討
+
+---
+
+## 特殊なアーキテクチャパターン：HSPを「Drawer（描画エンジン）」として使う
+
+### 概要
+
+HSPでは構造体の扱いが難しく、複雑なゲームロジックを実装するのが大変です。
+そこで、**ゲームロジック全体をC++/DLLで実装し、HSPは描画とUI表示のみを担当する**というアーキテクチャがあります。
+
+### このパターンが適している場合
+
+✅ **複雑なゲームロジック**
+- オブジェクト指向設計が必要
+- 多数のエンティティ管理（敵、弾、アイテム等）
+- 複雑な状態管理（ゲームステート、AI等）
+
+✅ **構造体・クラスを多用したい**
+- HSPでは構造体の扱いが制限的
+- C++ならクラス、継承、ポリモーフィズムが使える
+
+✅ **大規模プロジェクト**
+- コードの保守性・再利用性を重視
+- チーム開発で役割分担したい
+
+### アーキテクチャ例
+
+```
+┌─────────────────────────────────┐
+│  HSP（描画レイヤー）             │
+│  - screen, color, boxf, mes      │
+│  - UI表示                        │
+│  - 入力の受付と転送              │
+└─────────────────────────────────┘
+              ↕ DLL呼び出し
+┌─────────────────────────────────┐
+│  C++ DLL（ロジックレイヤー）     │
+│  - ゲームループ                  │
+│  - 当たり判定                    │
+│  - AI・物理演算                  │
+│  - エンティティ管理              │
+└─────────────────────────────────┘
+```
+
+### 実装イメージ
+
+**C++側（DLL）:**
+```cpp
+// ゲームロジック全体を管理
+class GameEngine {
+    std::vector<Enemy> enemies;
+    std::vector<Bullet> bullets;
+    Player player;
+    
+public:
+    void Update(float deltaTime);
+    RenderData GetRenderData();  // 描画情報を返す
+};
+
+// DLL公開関数
+extern "C" __declspec(dllexport) 
+void GameUpdate(float deltaTime, int* inputs) {
+    // ロジック更新
+    gameEngine.HandleInput(inputs);
+    gameEngine.Update(deltaTime);
+}
+
+extern "C" __declspec(dllexport)
+int GetObjectCount() { return gameEngine.GetObjectCount(); }
+
+extern "C" __declspec(dllexport)
+void GetObjectPosition(int index, int* x, int* y) {
+    auto pos = gameEngine.GetObjectPosition(index);
+    *x = pos.x;
+    *y = pos.y;
+}
+```
+
+**HSP側（描画）:**
+```hsp
+#uselib "gamelogic.dll"
+#func game_update "GameUpdate" double, var
+#func get_object_count "GetObjectCount"
+#func get_object_position "GetObjectPosition" int, var, var
+
+; メインループ
+screen 0, 800, 600
+dim inputs, 10  ; キー入力配列
+
+repeat
+    ; 入力収集
+    stick inputs(0), 15
+    
+    ; ゲームロジック更新（DLL）
+    game_update 16.6, inputs  ; 60FPS想定
+    
+    ; 描画（HSP）
+    redraw 0
+    color 0, 0, 0 : boxf
+    
+    get_object_count
+    objCount = stat
+    
+    repeat objCount
+        get_object_position cnt, x, y
+        ; オブジェクトを描画
+        pos x, y
+        mes "●"
+    loop
+    
+    redraw 1
+    await 16
+loop
+```
+
+### メリット
+
+✅ **ロジックとビューの分離** - 役割が明確で保守しやすい  
+✅ **C++の強力な機能を活用** - クラス、STL、デザインパターン等  
+✅ **描画はHSPで手軽に** - HSPの得意分野を活かせる  
+✅ **段階的移行が可能** - 最初はHSP、徐々にロジックをDLL化  
+
+### デメリット
+
+❌ **初期開発コストが高い** - 最初からDLLインターフェース設計が必要  
+❌ **デバッグが複雑** - HSPとC++を行き来する必要  
+❌ **オーバーヘッド** - 毎フレーム大量のデータをやり取りすると遅くなる可能性  
+
+### 判断ポイント
+
+この「HSP as Drawer」パターンを選ぶべきかは、以下で判断しましょう。
+
+**採用を検討すべき：**
+- ゲームロジックが複雑（100行以上のステート管理等）
+- オブジェクト数が多い（50個以上のエンティティ）
+- 既にC++の経験がある
+- 長期的な保守・拡張を見越している
+
+**通常のHSPで十分：**
+- シンプルなゲーム（ミニゲーム、パズル等）
+- プロトタイピング段階
+- 短期間で完成させたい
+- HSP初心者
 
 ---
 
