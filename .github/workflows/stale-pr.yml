@@ -1,0 +1,40 @@
+name: Close stale PRs
+
+on:
+  schedule:
+    - cron: "0 1 * * *" # 毎日 01:00 UTC（JST 10:00）
+  workflow_dispatch: {} # 手動実行用
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v10
+        with:
+          # Issue は対象外
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
+
+          # PR: 7日で stale → さらに7日で close
+          days-before-pr-stale: 7
+          days-before-pr-close: 7
+
+          stale-pr-label: "stale"
+          stale-pr-message: >
+            このPRは7日間更新がありません。
+            引き続き作業中であれば、更新またはコメントをお願いします。
+            7日以内に反応がない場合、自動的にクローズされます。
+          close-pr-message: >
+            14日間更新がなかったため、自動的にクローズしました。
+            再開する場合は再オープンするか、新しいPRを作成してください。
+
+          # 除外設定
+          exempt-pr-labels: "do-not-close"
+          exempt-draft-pr: true
+
+          # ブランチは削除しない（安全のため）
+          delete-branch: false
