@@ -2,7 +2,7 @@
 layout: post
 title: HSPでDLL化すべき処理・すべきでない処理の判断基準
 date: 2025-12-29 14:16:00 +0900
-author: HSP-Knowledge運営
+author: Velgial
 tags: [HSP3, DLL, パフォーマンス, 最適化, ベストプラクティス]
 summary: HSPアプリケーションの高速化・利便性向上のためのDLL化。実際にどんな処理をDLL化すべきで、どんな処理はHSPのまま書くべきかの判断基準と具体例を解説します。
 ---
