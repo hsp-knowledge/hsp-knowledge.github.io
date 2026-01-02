@@ -777,7 +777,7 @@ void objcolor(OptInt r = {}, OptInt g = {}, OptInt b = {});
 
 ```cpp
 // ラムダ式でコールバックを指定
-int button(std::string_view name, std::function<int()> callback);
+int button(std::string_view name, std::function<void()> callback);
 
 // 使用例
 button("Click Me", []() {
