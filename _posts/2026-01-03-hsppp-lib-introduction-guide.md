@@ -15,7 +15,7 @@ summary: ついに登場！　HSPPP Libを作りきったのでご紹介です�
 
 HSPで培った知識とコーディングスタイルを活かしながら、C++の型安全性、パフォーマンス、拡張性を手に入れることができます。
 
-**GitHub**: https://github.com/Velgail/HSPPP_Lib
+**GitHub**: [Velgail/HSPPP_Lib](https://github.com/Velgail/HSPPP_Lib)
 
 ### 特徴
 
@@ -106,7 +106,7 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 
 ## プロジェクト構成
 
-```
+```text
 HspppLib/
 ├── HspppLib/              # ライブラリ本体（静的ライブラリ）
 │   ├── module/            # C++23 モジュール (.ixx)
@@ -1169,7 +1169,7 @@ void hspMain() {
     Cel player = loadCel("player.png");
     if (!player) {
         mes("画像の読み込みに失敗しました");
-        return 1;
+        return;
     }
     
     player.divide(4, 4);  // 4x4分割
@@ -1189,7 +1189,7 @@ void hspMain() {
         await(100);
     }
     
-    return 0;
+    return;
 }
 ```
 
